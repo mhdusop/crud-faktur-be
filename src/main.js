@@ -16,6 +16,13 @@ app.use('/api/v1', router);
 
 const APP_PORT = config.APP_PORT || 3000;
 
+
+app.send('/', (req, res) => {
+   "<h1>hallo</h1>"
+})
+
 app.listen(APP_PORT, () => {
    console.log(`Server is running on port ${APP_PORT}`);
 });
+
+export default app;
