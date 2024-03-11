@@ -18,7 +18,9 @@ const APP_PORT = config.APP_PORT || 3000;
 
 
 app.send('/', (req, res) => {
-   "<h1>hallo</h1>"
+   res.json({
+      message: "hello"
+   })
 })
 
 app.listen(APP_PORT, () => {
