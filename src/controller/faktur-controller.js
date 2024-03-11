@@ -21,12 +21,14 @@ export const createFakturController = async (req, res) => {
       } = req.body
 
       const noFaktur = generateNoFaktur(no_faktur)
+      const formatIntQuantity = parseInt(quantity)
+      const formatIntHarga = parseInt(harga)
 
       const newFaktur = await createFakturService({
          no_faktur: noFaktur,
          nama_barang,
-         quantity,
-         harga,
+         quantity: formatIntQuantity,
+         harga: formatIntHarga,
          nama_pelanggan,
          phone,
          tgl_faktur
@@ -48,10 +50,18 @@ export const getAllFakturController = async (req, res) => {
    try {
       const fakturs = await getAllFakturService();
 
+      const totalHarga = fakturs.reduce((sum, faktur) => {
+         const product = faktur.quantity * faktur.harga;
+         return sum + product;
+      }, 0);
+
       res.json({
          status_code: 200,
          message: "Success",
-         data: fakturs
+         data: {
+            data_faktur: fakturs,
+            total_harga: totalHarga
+         }
       });
 
    } catch (error) {
@@ -97,12 +107,14 @@ export const updateFakturController = async (req, res) => {
       } = req.body
 
       const noFaktur = generateNoFaktur(no_faktur)
+      const formatIntQuantity = parseInt(quantity)
+      const formatIntHarga = parseInt(harga)
 
       const fakturUpdate = await updateFakturService(fakturId, {
          no_faktur: noFaktur,
          nama_barang,
-         quantity,
-         harga,
+         quantity: formatIntQuantity,
+         harga: formatIntHarga,
          nama_pelanggan,
          phone,
          tgl_faktur
