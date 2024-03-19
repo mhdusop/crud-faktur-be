@@ -14,13 +14,21 @@ datasource db {
 }
 
 model Faktur {
-  id             Int      @id @default(autoincrement())
-  no_faktur      String   @unique
-  nama_barang    String
-  quantity       Int
-  harga          Int
-  nama_pelanggan String   @db.VarChar(30)
-  phone          String
-  tgl_faktur     String
-  createdAt      DateTime @default(now())
+  uuid          String          @id @default(uuid())
+  no_faktur     String          @unique
+  customer_name String          @db.VarChar(30)
+  phone         String          @db.VarChar(13)
+  faktur_date   String
+  createdAt     DateTime        @default(now())
+  master_detail Master_Detail[]
+}
+
+model Master_Detail {
+  uuid         String @id @default(uuid())
+  product_name String
+  quantity     Int
+  price        Int
+  total        Int
+  faktur_uuid  String
+  faktur       Faktur @relation(fields: [faktur_uuid], references: [uuid])
 }

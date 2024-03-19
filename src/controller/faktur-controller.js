@@ -12,26 +12,18 @@ export const createFakturController = async (req, res) => {
    try {
       const {
          no_faktur,
-         nama_barang,
-         quantity,
-         harga,
-         nama_pelanggan,
+         customer_name,
          phone,
-         tgl_faktur
+         faktur_date
       } = req.body
 
       const noFaktur = generateNoFaktur(no_faktur)
-      const formatIntQuantity = parseInt(quantity)
-      const formatIntHarga = parseInt(harga)
 
       const newFaktur = await createFakturService({
          no_faktur: noFaktur,
-         nama_barang,
-         quantity: formatIntQuantity,
-         harga: formatIntHarga,
-         nama_pelanggan,
+         customer_name,
          phone,
-         tgl_faktur
+         faktur_date
       });
 
       res.json({
@@ -50,18 +42,10 @@ export const getAllFakturController = async (req, res) => {
    try {
       const fakturs = await getAllFakturService();
 
-      const totalHarga = fakturs.reduce((sum, faktur) => {
-         const product = faktur.quantity * faktur.harga;
-         return sum + product;
-      }, 0);
-
       res.json({
          status_code: 200,
          message: "Success",
-         data: {
-            data_faktur: fakturs,
-            total_harga: totalHarga
-         }
+         data: fakturs
       });
 
    } catch (error) {
@@ -72,10 +56,10 @@ export const getAllFakturController = async (req, res) => {
 
 // Get Faktur by id 
 export const getFakturByIdController = async (req, res) => {
+   const uuidFaktur = req.params.id;
    try {
-      const idFaktur = req.params.id;
 
-      const faktur = await getFakturByIdService(idFaktur);
+      const faktur = await getFakturByIdService(uuidFaktur);
 
       if (!faktur) {
          return res.status(404).json({ error: 'Faktur not found' });
@@ -95,29 +79,21 @@ export const getFakturByIdController = async (req, res) => {
 // Update faktur
 export const updateFakturController = async (req, res) => {
    try {
-      const fakturId = req.params.id
+      const uuidFaktur = req.params.id
       const {
          no_faktur,
-         nama_barang,
-         quantity,
-         harga,
-         nama_pelanggan,
+         customer_name,
          phone,
-         tgl_faktur
+         faktur_date
       } = req.body
 
       const noFaktur = generateNoFaktur(no_faktur)
-      const formatIntQuantity = parseInt(quantity)
-      const formatIntHarga = parseInt(harga)
 
-      const fakturUpdate = await updateFakturService(fakturId, {
+      const fakturUpdate = await updateFakturService(uuidFaktur, {
          no_faktur: noFaktur,
-         nama_barang,
-         quantity: formatIntQuantity,
-         harga: formatIntHarga,
-         nama_pelanggan,
+         customer_name,
          phone,
-         tgl_faktur
+         faktur_date
       });
 
       res.status(200).json({
@@ -135,8 +111,10 @@ export const updateFakturController = async (req, res) => {
 // Delete Faktur
 export const deleteFakturController = async (req, res) => {
    try {
-      const fakturId = req.params.id;
-      await deleteFakturService(fakturId);
+      const uuidFaktur = req.params.id;
+
+      await deleteFakturService(uuidFaktur);
+
       res.json({
          status_code: 200,
          message: 'Faktur deleted successfully'

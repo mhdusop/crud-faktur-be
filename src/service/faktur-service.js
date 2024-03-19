@@ -22,7 +22,7 @@ export const getFakturByIdService = async (id) => {
    try {
       return await prisma.faktur.findUnique({
          where: {
-            id: parseInt(id),
+            uuid: id,
          },
       });
    } catch (error) {
@@ -33,7 +33,7 @@ export const getFakturByIdService = async (id) => {
 export const updateFakturService = async (id, data) => {
    try {
       const updatedFaktur = await prisma.faktur.update({
-         where: { id: parseInt(id) },
+         where: { uuid: id },
          data,
       });
 
@@ -46,7 +46,7 @@ export const updateFakturService = async (id, data) => {
 
 export const deleteFakturService = async (id) => {
    try {
-      await prisma.faktur.delete({ where: { id: parseInt(id) } });
+      await prisma.faktur.delete({ where: { uuid: id } });
    } catch (error) {
       console.log(error);
    }
