@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import config from "./config/config.js";
 import router from "./routes/faktur-routes.js";
+import masterDetailRouter from "./routes/master-detail-router.js";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 
 // Router
 app.use('/api/v1', router);
+app.use('/api/v1', masterDetailRouter);
 
 const APP_PORT = config.APP_PORT || 3000;
 
